@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Arizona County Data - US Census Bureau</title>
+		<script type="text/javascript" src="../d3/d3.v3.js"></script>
+		<style type="text/css">
+			.tooltip {
+				-moz-transition: all 0.15s;
+				-o-transition: all 0.15s;
+				-webkit-transition: all 0.15s;
+				transition: all 0.15s;
+				opacity: 0.90;
+				position: absolute;
+				min-width: 60px;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				-webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}			
+			.tooltip.hidden {
+				display: none;
+			}			
+			.tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}			
+			.mapContainer {
+				display:inline-block;
+				overflow: none;
+				width: 320px;
+				height: 500px;
+				font-family: sans-serif, arial;
+				text-align: center;
+			}
+			.container {
+				width:980px;
+				border: 1px solid #ededed;
+				padding-top: 30px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.source a {
+				font-size: 10pt;
+				font-family: sans-serif, arial;
+				color: #888888;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- TOOLTIP HIDDEN DIVS -->
+		<div id="tooltip1" class="hidden tooltip">
+			<p><span id="countyPop-label"></span></p>
+		</div>
+		<div id="tooltip2" class="hidden tooltip">
+			<p><span id="countyRetail-label"></span></p>
+		</div>
+		<div id="tooltip3" class="hidden tooltip">
+			<p><span id="countyBuild-label"></span></p>
+		</div>
+		<div id="tooltip4" class="hidden tooltip">
+			<p><span id="countyDensity-label"></span></p>
+		</div>
+		<div id="tooltip5" class="hidden tooltip">
+			<p><span id="countyFirms-label"></span></p>
+		</div>
+		<div id="tooltip6" class="hidden tooltip">
+			<p><span id="countyFirmsWomen-label"></span></p>
+		</div>
+		<!-- MAP CHART DIVS -->
+		<div class="container">
+			<div id="az-countyPop-map" class="mapContainer">Population, 2012 (Estimate)</div>
+			<div id="az-countyRetail-map" class="mapContainer">Retail Sales per Capita, 2007</div>
+			<div id="az-countyBuild-map" class="mapContainer">Building Permits, 2012</div> 
+			<div id="az-countyDensity-map" class="mapContainer">Persons per Square Mile, 2010</div>
+			<div id="az-countyFirms-map" class="mapContainer">Total Number of Firms, 2007</div>
+			<div id="az-countyFirmsWomen-map" class="mapContainer">Women-owned Firms (Percent), 2007</div>
+			<span class="source"><a style="text-decoration:none;" target=blank href="http://quickfacts.census.gov/qfd/states/04000.html">Source: US Census Bureau 2010</a></span>      
+		</div>
+	</body>
+		<script type="text/javascript" src="../maps/Multiples_chart1.js"></script>
+		<script type="text/javascript" src="../maps/Multiples_chart2.js"></script> 
+		<script type="text/javascript" src="../maps/Multiples_chart3.js"></script>
+		<script type="text/javascript" src="../maps/Multiples_chart4.js"></script>
+		<script type="text/javascript" src="../maps/Multiples_chart5.js"></script>
+		<script type="text/javascript" src="../maps/Multiples_chart6.js"></script>
+</html>
