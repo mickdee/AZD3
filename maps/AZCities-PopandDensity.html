@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Arizona Places by Population and Density</title>
+		<script type="text/javascript" src="../d3/d3.v3.js"></script>
+		<style type="text/css">
+			#tooltip {
+				-moz-transition: all 0.15s;
+				-o-transition: all 0.15s;
+				-webkit-transition: all 0.15s;
+				transition: all 0.15s;
+				opacity: 0.90;
+				position: absolute;
+				min-width: 60px;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				-webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+			
+			#tooltip.hidden {
+				display: none;
+			}
+			
+			#tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}		
+			.scale {
+				margin-left: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="tooltip" class="hidden">
+			<p><span id="city-label"></span></p>
+		</div>
+		<div id="az-map"></div>
+		<script type="text/javascript">
+        //Width and height
+			var w = 500;
+			var h = 500;
+
+			//Define Arizona map projection
+			var projection = d3.geo.albers()
+								   .translate([w/2, h/2])
+								   .scale([3800])
+								   .rotate([108, 0, 0])
+								   .translate([400, 0]);
+
+			//Define path generator
+			var path = d3.geo.path()
+							 .projection(projection);
+
+			//Create SVG element
+			var svg = d3.select("#az-map")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+			//Load in GeoJSON data for AZ border
+			d3.json("data/us-arizona.json", function(json) {
+				
+				//Bind data and create one path per GeoJSON feature
+				svg.selectAll("path")
+				   .data(json.features)
+				   .enter()
+				   .append("path")
+				   .attr("d", path)
+				   .style("fill", "#efefef")
+				   .style("stroke-width", "2")
+				   .style("stroke","lightgray");
+
+				   //Load in cities data
+					d3.csv("data/arizona-cities.csv", function(data) {
+						
+						svg.selectAll("circle")
+						   .data(data)
+						   .enter()
+						   .append("circle")
+						   .attr("cx", function(d) {
+							   return projection([d.lon, d.lat])[0];
+						   })
+						   .attr("cy", function(d) {
+							   return projection([d.lon, d.lat])[1];
+						   })
+						   .attr("r", function(d) {
+								return Math.sqrt(parseInt(d.population) * 0.0004);
+						   })
+						   //Set circle fill color to "density" value
+						   .style("fill", function(d) {
+							   	    if (d.density <= 500) {
+							   			return "#7B3294";
+						   			} 
+						   			else if (d.density > 500 && d.density <= 1500) {
+						   				return "#C2A5CF";
+						   			}
+						   			else if (d.density > 1500 && d.density <= 2500) {
+						   				return "#FFFFFF";
+						   			}
+						   			else if (d.density > 2500 && d.density <= 3500) {
+						   				return "#A6DBA0"
+						   			}
+						   			else {
+							   		return "#008837";
+						   			}
+						   })
+						   .style("stroke-width", "1")
+						   //Set circle stroke color to "type" value
+						   .style("stroke", "#222") 
+						   .style("opacity", 0.8)
+						   .on("mouseover", function(d) {   //Add tooltip on mouseover for each circle
+
+								//Get this circle's x/y values, then augment for the tooltip
+								var xPosition = d3.select(this).attr("cx");
+								var yPosition = d3.select(this).attr("cy");
+
+								//Update the tooltip position and value
+								d3.select("#tooltip")
+									//Show the tooltip above where the mouse triggers the event
+									.style("left", (d3.event.pageX) + "px")     
+                					.style("top", (d3.event.pageY - 90) + "px")
+									.select("#city-label")	
+									.html("<strong>" + d.place + "</strong>" + "<br/>" + "population: " + d.population + "<br/>" + "pop. / sq mi: " + d.density)			
+						   
+								//Show the tooltip
+								d3.select("#tooltip").classed("hidden", false);
+
+						   })
+						   .on("mouseout", function() {
+						   
+								//Hide the tooltip
+								d3.select("#tooltip").classed("hidden", true);
+								
+						   })	
+					});
+		
+			});
+		</script>
+		<!-- Note to self: placeholder jpg; replace with svg scale -->
+		<img class="scale" src="img/az-density-legend.jpg">
+	</body>
+</html>
