@@ -95,7 +95,15 @@
                 					.style("top", (d3.event.pageY - 70) + "px")
 									.select("#countyFirmsWomen-label")	
 									//CSV data has been bound to JSON at this point - so values must be referenced from JSON properties
-									.html("<strong>" + d.properties.name + "</strong>" + "<br/>" + "Woman-owned Firms: " + d.properties.value + "%")			
+									//Conditional tooltip that says if there is a value in the data, show it. If not, show "no data available"		
+						   			.html(function() {
+						   				if (d.properties.value >= 0) {
+						   					return "<strong>" + d.properties.name + "</strong>" + "<br/>" + "Woman-owned Firms: " + d.properties.value + "%";
+						   				}
+						   				else {
+						   					return "<strong>" + d.properties.name + "</strong>" +  "<br/>" + "no data available";
+						   				}
+						   			})				
 						   
 								//Show the tooltip
 								d3.select("#tooltip6").classed("hidden", false);
