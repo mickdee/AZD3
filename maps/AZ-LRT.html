@@ -23,7 +23,7 @@
 			  text-anchor:middle;
 			}
 			.stations circle {
-			  fill: #FDAE6B;
+			 /* fill: #FDAE6B; */
 			  stroke: black;
 			  stroke-width: 1.5px;
 			}
@@ -33,6 +33,9 @@
 		<!-- D3 SVG container goes here -->
 		<div id="map"></div>
 		<script type="text/javascript">	
+
+			//Adding a color scale that takes the domain of station boardings and outputs to a range of sequential colors
+			var colorScale = d3.scale.quantize().domain([50000,1000000]).range(['#FFFFB2', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#B10026']);
 
 			// Create the Google Map…
 			var map = new google.maps.Map(d3.select("#map").node(), {
@@ -70,14 +73,23 @@
 			          		return Math.sqrt(parseInt(d.value[3]) * 0.00045 + padding);
 			          })
 			          .attr("cx", padding)
-			          .attr("cy", padding);
+			          .attr("cy", padding)
+			          .style("fill", function(d) {
+			          		//get data value
+			          		var colorValue = d.value[3]
+			          		if (colorValue) {
+			          			return colorScale(colorValue);
+			          		} else {
+			          			return "#ccc";
+			          		}
+			          });
 
 			      // Add a label.
 			     marker.append("svg:text")
 			         .attr("x", padding - 3)
 			         .attr("y", padding)
 			         .attr("dy", ".45em")
-			         .attr("dx", ".6em")
+			         .attr("dx", ".4em")
 			         .text(function(d) { return d.value[5]; });
 
 			      function transform(d) {
